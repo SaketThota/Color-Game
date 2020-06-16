@@ -61,20 +61,20 @@ function generate(delta) {
 		medium.style.background = "#303030";
 		hard.style.background = "#303030";
 		level = "easy";
-		easy.style.background = 'linear-gradient(to top left,#00a1c4, #05536e )';
+		easy.style.background = 'linear-gradient(to right,#f7b733, #CB356B )';
 		easy.style.fontWeight = "550";
 		first = false;
 	} else if (delta === 64) {
 		easy.style.background = "#303030";
 		hard.style.background = "#303030";
 		level = "medium";
-		medium.style.background = 'linear-gradient(to top left,#00a1c4, #05536e )';
+		medium.style.background = 'linear-gradient(to right,#f7b733, #CB356B )';
 		medium.style.fontWeight = "550";
 	} else { 
 		easy.style.background = "#303030";
 		medium.style.background = "#303030";
 		level = "hard";
-		hard.style.background = 'linear-gradient(to top left,#00a1c4, #05536e )';
+		hard.style.background = 'linear-gradient(to right,#f7b733, #CB356B )';
 		hard.style.fontWeight = "550";
 	}
 	for (let i = 0; i < 6; ++i) vis[i] = 0;

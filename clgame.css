@@ -89,5 +89,7 @@ html,body{
 }
 
 #new-colors:hover{
-    background-image: linear-gradient(to right,#0486cc,#027cbe,#0486cc );
+    background-image: linear-gradient(to right,#c03434,#2c3e50);
+    color: #fff133;
+    font-weight: 550;
 }
