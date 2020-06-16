@@ -9,121 +9,100 @@ function random(a, b) {
     }
     return (a + (b - a) * Math.random()) | 0;
 }
-
-const squares = document.querySelectorAll(".square");
-
-for (var i = 0; i < 6; ++i) {
-	squares[i].style.backgroundColor =  `rgb(${random(255)}, ${random(255)}, ${random(256)})`;
+function deviate(n, delta, mod = 256) {
+	n = n + random(-delta, delta);
+	n = (n + mod) % mod;
+	return n;
 }
-
-var display = document.getElementById("rgb");
-var newColors = document.querySelector("#new-colors");
-var pickedColor = squares[random(6)].style.backgroundColor;
-display.textContent = pickedColor;
-
-var won;
-var easy = document.querySelector("#easy");
-var medium = document.querySelector("#medium");
-var hard = document.querySelector("#hard");
-
-newColors.addEventListener("click", generate);
-
-function generate() { 
-	for (var i = 0; i < 6; ++i) {
-		squares[i].style.backgroundColor = `rgb(${random(256)}, ${random(255)}, ${random(256)})`;
-	}
-	
-	pickedColor = squares[random(6)].style.backgroundColor;
-	display.textContent = pickedColor;
-	won = false;
-	displayStatus.textContent = "";
-}
-
-var statusWon = ["YOU GUSSED IT !", "BULLS EYE !", "FABULOUS !"];
-var statusLose = ["NEVER GIVE UP !", "TRY AGAIN !", "COME ON !"];
+var statusWon = ["FANTASTIC !","YOU GUSSED IT !" , "FABULOUS !", "AMAZING !", "ASTONISHING !"];
+var statusLose = ["NEVER GIVE UP !", "TRY AGAIN !", "COME ON !","KEEP PUSHING !"];
 var vis = [0, 0, 0, 0, 0, 0];
 
 function makeSame() { 
-	for (let i = 0; i < 6; i++) { 
+	for (let i = 0; i < 6; i++) {
 		squares[i].style.backgroundColor = pickedColor;
+		vis[i] = 0;
 	}
+}
+
+const squares = document.querySelectorAll(".square");
+var display = document.getElementById("rgb"), newColors = document.querySelector("#new-colors"), won;
+var easy = document.querySelector("#easy"), medium = document.querySelector("#medium"), hard = document.querySelector("#hard");
+var displayStatus = document.querySelector("#displayStatus");
+
+var level = "easy", pickedColor, first = true;
+if (first) { 
+	generate(128);
+}
+
+newColors.addEventListener("click",() => decide(level));
+
+function decide(s) { 
+	if (s == "easy") generate(128);
+	if (s == "medium") generate(64);
+	if (s == "hard") generate(32);
+	displayStatus.textContent = "";
+}
+
+squares[0].addEventListener("click", () => check(0));
+squares[1].addEventListener("click", () => check(1));
+squares[2].addEventListener("click", () => check(2));
+squares[3].addEventListener("click", () => check(3));
+squares[4].addEventListener("click", () => check(4));
+squares[5].addEventListener("click", () => check(5));
+
+easy.addEventListener("click", () => generate(128));
+medium.addEventListener("click", () => generate(64));
+hard.addEventListener("click", () => generate(32));
+
+
+function generate(delta) { 
+	if (delta === 128) {
+		medium.style.background = "#303030";
+		hard.style.background = "#303030";
+		level = "easy";
+		easy.style.background = 'linear-gradient(to top left,#00a1c4, #05536e )';
+		easy.style.fontWeight = "550";
+		first = false;
+	} else if (delta === 64) {
+		easy.style.background = "#303030";
+		hard.style.background = "#303030";
+		level = "medium";
+		medium.style.background = 'linear-gradient(to top left,#00a1c4, #05536e )';
+		medium.style.fontWeight = "550";
+	} else { 
+		easy.style.background = "#303030";
+		medium.style.background = "#303030";
+		level = "hard";
+		hard.style.background = 'linear-gradient(to top left,#00a1c4, #05536e )';
+		hard.style.fontWeight = "550";
+	}
+	for (let i = 0; i < 6; ++i) vis[i] = 0;
+	won = false;
+	displayStatus.textContent = "";
+	
+	let r = random(256), g = random(256), b = random(256);
+	for (var i = 0; i < 6; ++i) {
+		squares[i].style.backgroundColor = `rgb(${deviate(r, delta)}, ${deviate(g, delta)}, ${deviate(b, delta)})`;
+	}
+	pickedColor = squares[random(6)].style.backgroundColor;
+	display.textContent = pickedColor;
 }
 
 function check(idx) { 
-	// console.log(idx);
-	// console.log(vis[idx]);
-	if (won == false) {
+	if (!won && !vis[idx]) {
 		if (squares[idx].style.backgroundColor === pickedColor) {
-			displayStatus.textContent = statusWon[random(3)];
+			displayStatus.textContent = statusWon[random(5)];
+			displayStatus.style.color = "#52c234";
 			won = true;
 			makeSame();
 		} else {
-			if (vis[idx] === 0)
-				displayStatus.textContent = statusLose[random(3)];
-			vis[idx] = 1;
-			squares[idx].style.backgroundColor = "white";
+			if (vis[idx] === 0) {
+				displayStatus.textContent = statusLose[random(4)];
+				displayStatus.style.color = "#DC281E";
+			}
+			squares[idx].style.backgroundColor = "#ffebc4";
 		}
-	}
-}
-
-squares[0].addEventListener("click", check(0));
-squares[1].addEventListener("click", check(1));
-squares[2].addEventListener("click", check(2));
-squares[3].addEventListener("click", check(3));
-squares[4].addEventListener("click", check(4));
-squares[5].addEventListener("click", check(5));
-
-easy.addEventListener("click", generateEasy);
-medium.addEventListener("click", generateMedium);
-hard.addEventListener("click", generateHard);
-
-function generateEasy() { 
-	easy.style.backgroundColor = "#0082c8";
-	medium.style.backgroundColor = "#303030";
-	hard.style.backgroundColor = "#303030";
-
-	var min1 = random(0, 40);
-	var max1 = random(220, 255);	
-
-	console.log("min1 = " + min1);
-	console.log("max1 = " + max1);
-	console.log("diff = " + (max1 - min1));
-
-	for (var i = 0; i < 6; ++i) {
-		squares[i].style.backgroundColor = `rgb(${random(min1,max1)}, ${random(min1,max1)}, ${random(min1,max1)})`;
-	}
-}
-
-function generateMedium() { 
-	easy.style.backgroundColor = "#303030";
-	medium.style.backgroundColor = "#0082c8";
-	hard.style.backgroundColor = "#303030";
-
-	var min2 = random(0, 106);
-	var max2 = random(151, 255);	
-
-	console.log("min2 = " + min2);
-	console.log("max2 = " + max2);
-	console.log("diff = " + (max2 - min2));
-
-	for (var i = 0; i < 6; ++i) {
-		squares[i].style.backgroundColor = `rgb(${random(min2, max2)}, ${random(min2, max2)}, ${random(min2, max2)})`;
-	}
-}
-
-function generateHard() { 
-	easy.style.backgroundColor = "#303030";
-	medium.style.backgroundColor = "#303030";
-	hard.style.backgroundColor = "#0082c8";
-
-	var min3 = random(0, 106);
-	var max3 = random(151, 255);
-
-	console.log("min3 = " + min3);
-	console.log("max3 = " + max3);
-	console.log("diff = " + (max3 - min3));
-
-	for (var i = 0; i < 6; ++i) {
-		squares[i].style.backgroundColor = `rgb(${random(min3, max3)}, ${random(min3, max3)}, ${random(min3, max3)})`;
+		vis[idx] = 1;
 	}
 }
