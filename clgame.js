@@ -101,7 +101,7 @@ function check(idx) {
 				displayStatus.textContent = statusLose[random(4)];
 				displayStatus.style.color = "#DC281E";
 			}
-			squares[idx].style.backgroundColor = "#ffebc4";
+			squares[idx].style.backgroundColor = "#fcfbfb";
 		}
 		vis[idx] = 1;
 	}
