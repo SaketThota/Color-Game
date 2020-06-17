@@ -23,7 +23,7 @@ html,body{
 }
 
 .navbar{
-    background-color: #303030;
+    background-color: #2b2b2b;
     display: flex;
     justify-content: space-around;
 }
